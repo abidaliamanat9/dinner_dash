@@ -1,0 +1,58 @@
+{% extends "../base.html" %}
+
+{% block content %}
+  <h1>Sign Up</h1>
+  {% if form.errors %}
+  <div class="align-items-center my-3" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 9999;">
+      <div class="d-flex p-2 flex-column">
+          {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                  <div >
+                      {{ field|title }}: {{ error }}
+                  </div>
+              {% endfor %}
+          {% endfor %}
+      </div>
+  </div>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    {% comment %} {% for field in form %}
+    <div class="m-form-group">
+        <label for="{{ field.id_for_label }}" class="m-text-light">{{ field.label }}</label>
+        {{ field }}
+    </div>  {% endcomment %}
+    {% comment %} {% endfor %} {% endcomment %}
+    <div class="mb-3">
+      <label class="form-label">Email address</label>
+      <br>
+      {{form.email}}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">First Name</label>
+      <br>
+      {{form.first_name}}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Last Name</label>
+      <br>
+      {{form.last_name}}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <br>
+      {{form.password1}}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Confirm Password</label>
+      <br>
+      {{form.password2}}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Dispaly Name</label>
+      <br>
+      {{form.display_name}}
+    </div>
+    <button type="submit">Sign up</button>
+  </form>
+{% endblock content %}
