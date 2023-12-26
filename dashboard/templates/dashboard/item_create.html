@@ -1,0 +1,10 @@
+{% extends 'adminbase.html' %}
+
+{% block bcontent %}
+  <h2>Create Item</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary" type="submit">Save</button>
+  </form>
+{% endblock %}
