@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, ListView
+from django.views.generic import CreateView, UpdateView, ListView,DeleteView
 from .models import Category,Item
 from .mixin import AdminRequiredMixin
 
@@ -16,6 +16,10 @@ class ItemUpdateView(AdminRequiredMixin,UpdateView):
     template_name = 'dashboard/item_update.html'
     fields = ['title', 'description', 'price', 'photo', 'category'] 
     success_url = reverse_lazy('dashboard')  
+
+class ItemDeleteView(AdminRequiredMixin,DeleteView):
+    model = Item
+    success_url = reverse_lazy('dashboard')
 
 class ItemListView(ListView):
     model = Item
@@ -36,6 +40,13 @@ class CategoryUpdateView(AdminRequiredMixin,UpdateView):
     fields = ['name'] 
     success_url = reverse_lazy('dashboard') 
 
+class CategoryDeleteView(AdminRequiredMixin,DeleteView):
+    model = Category
+    success_url = reverse_lazy('dashboard')
+
 def dashboard(request):
-    return render(request,'dashboard/dashboard.html')
+    categories = Category.objects.all()
+    items = Item.objects.all()
+
+    return render(request,'dashboard/dashboard.html',{'categories':categories,'items':items})
 

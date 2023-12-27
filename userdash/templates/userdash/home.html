@@ -24,7 +24,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{item.title}}</h5>
 				                <hr>
-				                <a href="#" class="btn btn-primary">Add to Cart</a>
+				                <a href="{% url 'add_to_cart' item_id=item.pk %}" class="btn btn-primary">Add to Cart</a>
 			                    <a class="btn btn-outline-success" href="{% url 'item_detail' pk=item.pk %}">View</a>
 				                <h4 style="display: inline-block; float: right"><strong>{{item.price}}$</strong></h4>
 			                </div>
