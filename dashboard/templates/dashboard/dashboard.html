@@ -1,1 +1,43 @@
-{% extends '../base.html' %}
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block bcontent %}
+<div class="container-fluid-modify">
+    <div class="row w-100 h-100">
+        <div class="col-md-3 col-lg-3 w-25 categories-container">
+            <!-- Left sidebar for categories -->
+            <div class="list-group">
+                <h4>Categories</h4>
+                {% for category in categories %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ category.name }}
+                        <div class="btn-group">
+                            <a href="{% url 'category_update' pk=category.pk %}" class="btn btn-primary btn-sm">Update</a>
+                            <a href="{% url 'category_delete' pk=category.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-9 col-lg-9 w-75 products-container">
+            <div class="container-fluid-modify">
+	            <div class="row">
+                    {% for item in items %}
+		            <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card card-vertical my-3">
+                            <img src="{{ item.photo.url }}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{item.title}}</h5>
+				                <hr>
+				                <a href="{% url 'item_update' pk=item.pk %}" class="btn btn-primary">Update</a>
+			                    <a class="btn btn-outline-success" href="{% url 'item_delete' pk=item.pk %}">Delete</a>
+				                <h4 style="display: inline-block; float: right"><strong>{{item.price}}$</strong></h4>
+			                </div>
+		                </div>
+                    </div>
+                    {% endfor %}
+	            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}
