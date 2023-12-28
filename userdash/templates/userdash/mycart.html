@@ -1,45 +1,11 @@
  {% extends 'userbase.html' %}
 {% load static %}
-
-{% comment %} {% block bcontent %}
-<div class="container">
-    <h2>Your Cart</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Item</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in cart %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>${{ item.price|floatformat:2 }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <p>Total Price: ${{ total_price|floatformat:2 }}</p>
-
-    <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
-</div>
-{% endblock %}  {% endcomment %}
-
-
-{% comment %} {% extends 'userbase.html' %}
-{% load static %} {% endcomment %}
 {% block bcontent %}
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="box-element">
 
-				<a  class="btn btn-outline-dark" href="{% url 'home' %}">Continue Shopping</a>
+				<a  class="btn btn-outline-dark" href="{% url 'userhome' %}">Continue Shopping</a>
 
 				<br>
 				<br>
@@ -47,7 +13,7 @@
 					<tr>
 						<th><h5>Items: <strong>{{total_items}}</strong></h5></th>
 						<th><h5>Total:<strong> ${{total_price|floatformat:2}}</strong></h5></th>
-                        <th><a class="btn btn-outline-dark" href="{% url 'delcart' %}" >Clear Cart</a></th>
+                        <th><a class="btn btn-outline-dark" href="{% url 'clearcart' %}" >Clear Cart</a></th>
 						<th>
 							<a  style="float:right; margin:5px;" class="btn btn-success" href="">Checkout</a>
 						</th>
