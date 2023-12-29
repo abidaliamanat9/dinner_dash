@@ -12,7 +12,6 @@
                         {{ category.name }}
                         <div class="btn-group">
                             <a href="{% url 'category_update' pk=category.pk %}" class="btn btn-primary btn-sm">Update</a>
-                            <a href="{% url 'category_delete' pk=category.pk %}" class="btn btn-danger btn-sm">Delete</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -27,9 +26,9 @@
                             <img src="{{ item.photo.url }}" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title">{{item.title}}</h5>
+                                <p class="card-text">Retired: {{item.retired}}</p>
 				                <hr>
 				                <a href="{% url 'item_update' pk=item.pk %}" class="btn btn-primary">Update</a>
-			                    <a class="btn btn-outline-success" href="{% url 'item_delete' pk=item.pk %}">Delete</a>
 				                <h4 style="display: inline-block; float: right"><strong>{{item.price}}$</strong></h4>
 			                </div>
 		                </div>

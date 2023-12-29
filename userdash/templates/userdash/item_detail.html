@@ -1,14 +1,13 @@
 {% extends 'userbase.html' %}
-{% load static %}
 {% block bcontent %}
-    <div class="container">
-        <div class="card">
-            <img src="{{ item.photo.url }}" class="card-img-top" alt="...">
-            <div class="card-body">
+    <div class="container mt-5">
+        <div class="card d-flex flex-row">
+            <img src="{{ item.photo.url }}" class="w-25 card-img-top" alt="..." style=
+            'width:30%;'>
+            <div class="card-body w-75">
                 <h5 class="card-title">{{ item.title }}</h5>
                 <p class="card-text">{{ item.description }}</p>
                 <p class="card-text"><strong>${{ item.price }}</strong></p>
-                <a href="#" class="btn btn-primary">Add to Cart</a>
                 <a href="{% url 'userhome'%}" style="display: inline-block; float: right">Back to Home</a>
             </div>
         </div>
