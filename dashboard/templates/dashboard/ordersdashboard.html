@@ -1,0 +1,69 @@
+{% extends 'adminbase.html' %}
+{% block bcontent %}
+<br>
+  <div>
+    <h2>Total Orders by Status</h2>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Statuses</th>
+        <th>Ordered</th>
+        <th>Paid</th>
+        <th>Cancelled</th>
+        <th>Completed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Total</td>
+        <td><a href="{% url 'orderedorderfilter' %}">{{ order_status_counts.ordered }}</a></td>
+        <td><a href="{% url 'paidorderfilter' %}">{{ order_status_counts.paid }}</a></td>
+        <td><a href="{% url 'canceledorderfilter' %}">{{ order_status_counts.cancelled }}</a></td>
+        <td><a href="{% url 'completedorderfilter' %}">{{ order_status_counts.completed }}</a></td>
+        </tr>
+    </tbody>
+  </table>
+  
+<br><br>
+  <h2>All Orders</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Status</th>
+        <th>Actions</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.status }}</td>
+          <td>
+            <a href="{% url 'orderdetail' order_id=order.id %}" class="btn btn-outline-secondary">Order Details</a>
+          </td>
+          {% if order.status == "PAID" %}
+            <td>          
+                <a href="{% url 'completedorder' order_id=order.id %}">Mark as Completed</a>
+            </td>
+            <td>
+                <a href="{% url 'cancelorder' order_id=order.id %}" >Cancel Order</a>
+            </td>
+          {% elif order.status == "ORDERED" %}
+            <td>
+                <a href="{% url 'paidorder' order_id=order.id %}" >Mark as Paid</a>
+            </td>
+            <td>
+                <a href="{% url 'cancelorder' order_id=order.id %}">Cancel Order</a>
+            </td>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
