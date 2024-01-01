@@ -6,6 +6,16 @@
         <div class="col-md-3 col-lg-3 w-25 categories-container">
             <!-- Left sidebar for categories -->
             <div class="list-group">
+                <h4>Resturants</h4>
+                {% for resturant in resturants %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ resturant.name }}
+                    <div class="btn-group">
+                        <a href="{% url 'resturant_update' pk=resturant.pk %}" class="btn btn-primary btn-sm">Update</a>
+                    </div>
+                </div>
+                {% endfor %}
+                <br><br>
                 <h4>Categories</h4>
                 {% for category in categories %}
                     <div class="list-group-item d-flex justify-content-between align-items-center">
