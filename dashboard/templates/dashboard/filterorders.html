@@ -1,0 +1,47 @@
+{% extends 'adminbase.html' %}
+{% block bcontent %}
+<br><br>
+<div class="d-flex justify-content-between align-items-center">
+    <h2>{{ status }} Orders</h2>
+    <a href="{% url 'ordersdashboard'  %}" class="btn btn-primary">All Orders</a>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Status</th>
+        <th>Actions</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.status }}</td>
+          <td>
+            <a href="{% url 'orderdetail' order_id=order.id %}" class="btn btn-outline-secondary">Order Details</a>
+          </td>
+          {% if order.status == "PAID" %}
+            <td>          
+                <a href="{% url 'completedorder' order_id=order.id %}">Mark as Completed</a>
+            </td>
+            <td>
+                <a href="{% url 'cancelorder' order_id=order.id %}" >Cancel Order</a>
+            </td>
+          {% elif order.status == "ORDERED" %}
+            <td>
+                <a href="{% url 'paidorder' order_id=order.id %}" >Mark as Paid</a>
+            </td>
+            <td>
+                <a href="{% url 'cancelorder' order_id=order.id %}">Cancel Order</a>
+            </td>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
