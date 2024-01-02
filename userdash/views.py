@@ -4,31 +4,46 @@ from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponse
-from dashboard.models import Category, Item, CartItem, Order
+from dashboard.models import Category, Item, CartItem, Order, Resturant
 from django.contrib.auth.mixins import LoginRequiredMixin
-import pdb
-
+from django.contrib import messages
+from django.db.models import Count
 
 class UserHomeView(View):
     def get(self, request):
+        resturants = Resturant.objects.all()
         categories = Category.objects.all()
         items = Item.objects.filter(retired=False)
 
         return render(
             request,
             "userdash/userhome.html",
-            {"categories": categories, "items": items},
+            {"resturants": resturants, "categories": categories, "items": items},
         )
 
 
 class CategoryItemsView(View):
     def get(self, request, cg_id):
+        resturants = Resturant.objects.all()
         categories = Category.objects.all()
         items = Item.objects.filter(category__id=cg_id)
         return render(
             request,
             "userdash/userhome.html",
-            {"categories": categories, "items": items},
+            {"resturants": resturants, "categories": categories, "items": items},
+        )
+
+
+class ResturantItemsView(View):
+    def get(self, request, rest_id):
+        resturants = Resturant.objects.all()
+        categories = Category.objects.all()
+        items = Item.objects.filter(resturant__id=rest_id)
+
+        return render(
+            request,
+            "userdash/userhome.html",
+            {"resturants": resturants, "categories": categories, "items": items},
         )
 
 
@@ -38,19 +53,46 @@ class ItemDetail(DetailView):
     context_object_name = "item"
 
 
+class PopularItemView(View):
+    def get(self, request):
+        resturants = Resturant.objects.all()
+        categories = Category.objects.all()
+        item_dict = (
+            CartItem.objects.values("item__title")
+            .annotate(max=Count("item__title"))
+            .order_by("-max")
+            .first()
+        )
+        items = Item.objects.filter(title=item_dict["item__title"])
+        return render(
+            request,
+            "userdash/userhome.html",
+            {"resturants": resturants, "categories": categories, "items": items},
+        )
+
+
 class AddToCart(View):
     def get(self, request, item_id):
-        try:
-            item = Item.objects.get(pk=item_id)
-        except ObjectDoesNotExist:
-            return HttpResponse("Item not found", status=404)
+        item = Item.objects.get(pk=item_id)
+
+        resturant = item.resturant
         if request.user.is_authenticated and not request.user.is_staff:
             try:
-                cartitem = CartItem.objects.get(item=item, order=None)
+                cartitem = CartItem.objects.get(
+                    item=item, order=None, user=request.user
+                )
                 cartitem.quantity += 1
                 cartitem.stprice = cartitem.quantity * item.price
                 cartitem.save()
             except:
+                cartitems = CartItem.objects.filter(
+                    order=None, user=request.user
+                ).first()
+                if cartitems and cartitems.item.resturant.id != resturant.id:
+                    messages.warning(
+                        request, "You can only add items from one restaurant at a time."
+                    )
+                    return redirect("userhome")
                 CartItem.objects.create(
                     item=item,
                     quantity=1,
@@ -59,6 +101,12 @@ class AddToCart(View):
                     user=request.user,
                 )
         else:
+            current_resturant_id = request.session.get("resturant_id")
+            if current_resturant_id and current_resturant_id != resturant.id:
+                messages.warning(
+                    request, "You can only add items from one restaurant at a time."
+                )
+                return redirect("userhome")
             cart = request.session.get("cart", [])
 
             for cart_item in cart:
@@ -76,6 +124,7 @@ class AddToCart(View):
                 }
             )
             request.session["cart"] = cart
+            request.session["resturant_id"] = resturant.id
             request.session.save()
 
         return redirect("userhome")
@@ -105,6 +154,7 @@ class ClearCart(View):
             items.delete()
         else:
             request.session.pop("cart", None)
+            request.session.pop("resturant_id", None)
         return redirect("userhome")
 
 
@@ -131,10 +181,14 @@ class CheckOutView(LoginRequiredMixin, View):
     login_url = reverse_lazy("login")
 
     def get(self, request):
-        order = Order.objects.create(user=request.user)
-        cartitems = CartItem.objects.filter(user=request.user, order=None).update(
-            order=order
-        )
+        cartitems = CartItem.objects.filter(user=request.user, order=None)
+        if cartitems.exists():
+            order = Order.objects.create(user=request.user)
+            cartitems.update(order=order)
+        else:
+            messages.warning(
+                request, "You cart is empty! Order is not placed with empty cart"
+            )
         return redirect("userhome")
 
 
@@ -164,3 +218,55 @@ class OrderDetailView(LoginRequiredMixin, ListView):
                 "total_price": total_price,
             },
         )
+
+
+class IncrementQuantityView(View):
+    def get(self, request, item_id):
+        cartitem = CartItem.objects.get(pk=item_id)
+        item = Item.objects.get(pk=cartitem.item_id)
+
+        if request.user.is_authenticated and not request.user.is_staff:
+            cartitem = CartItem.objects.get(item=item, order=None, user=request.user)
+            cartitem.quantity += 1
+            cartitem.stprice = cartitem.quantity * item.price
+            cartitem.save()
+        else:
+            cart = request.session.get("cart", [])
+
+            for cart_item in cart:
+                if cart_item["id"] == item.id:
+                    cart_item["quantity"] += 1
+                    cart_item["stprice"] = cart_item["quantity"] * cart_item["price"]
+                    request.session.save()
+            request.session["cart"] = cart
+            request.session.save()
+
+        return redirect("mycart")
+
+
+class DecrementQuantityView(View):
+    def get(self, request, item_id):
+        cartitem = CartItem.objects.get(pk=item_id)
+        item = Item.objects.get(pk=cartitem.item_id)
+
+        if request.user.is_authenticated and not request.user.is_staff:
+            cartitem = CartItem.objects.get(item=item, order=None, user=request.user)
+            cartitem.quantity -= 1
+            if cartitem.quantity < 1:
+                cartitem.quantity = 1
+            cartitem.stprice = cartitem.quantity * item.price
+            cartitem.save()
+        else:
+            cart = request.session.get("cart", [])
+
+            for cart_item in cart:
+                if cart_item["id"] == item.id:
+                    cart_item["quantity"] -= 1
+                    if cart_item["quantity"] < 1:
+                        cart_item["quantity"] = 1
+                    cart_item["stprice"] = cart_item["quantity"] * cart_item["price"]
+                    request.session.save()
+            request.session["cart"] = cart
+            request.session.save()
+
+        return redirect("mycart")

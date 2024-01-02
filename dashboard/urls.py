@@ -12,6 +12,14 @@ urlpatterns = [
         views.CategoryUpdateView.as_view(),
         name="category_update",
     ),
+    path(
+        "resturant/create/", views.ResturantCreateView.as_view(), name="resturant_create"
+    ),
+    path(
+        "resturant/update/<int:pk>/",
+        views.ResturantUpdateView.as_view(),
+        name="resturant_update",
+    ),
     path("adminhome/", views.Dashboard.as_view(), name="dashboard"),
     path(
         "ordersdashboard/",

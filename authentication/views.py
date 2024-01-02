@@ -25,6 +25,10 @@ class SignupView(View):
 class CustomLoginView(LoginView):
     template_name = "registration/login.html"
 
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        return response
+
     def form_valid(self, form):
         response = super().form_valid(form)
         cart = self.request.session.get("cart", [])
@@ -32,8 +36,12 @@ class CustomLoginView(LoginView):
             for item_data in cart:
                 quantity = item_data.get("quantity")
                 item_id = item_data.get("id")
+                stprice = item_data.get("stprice")
                 CartItem.objects.create(
-                    quantity=quantity, item_id=item_id, user=self.request.user
+                    quantity=quantity,
+                    item_id=item_id,
+                    stprice=stprice,
+                    user=self.request.user,
                 )
             self.request.session.pop("cart", None)
         return response

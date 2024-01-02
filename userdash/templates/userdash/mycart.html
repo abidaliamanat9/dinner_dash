@@ -1,4 +1,5 @@
 {% extends 'userbase.html' %}
+{% load static %}
 {% block bcontent %}
 	<div class="row">
 		<div class="col-lg-12">
@@ -43,6 +44,11 @@
 					{% endif %}
 					<div style="flex:1">
 						<p class="quantity">{{item.quantity}}</p>
+						<div class="quantity">
+							<a href={% url 'incrementquantity' item_id=item.id %}><img class="chg-quantity" src="{% static  'images/arrow-up.png' %}"></a>
+					
+							<a href={% url 'decrementquantity' item_id=item.id %}><img class="chg-quantity" src="{% static  'images/arrow-down.png' %}"></a>
+						</div>
 					</div>
 					<div style="flex:1"><p>${{item.stprice|floatformat:2}}</p></div>
                     <div style="flex:1"><a class="btn btn-outline-dark" href="{% url 'rmfromcart' item_id=item.id %}" >Remove Item</a></div>

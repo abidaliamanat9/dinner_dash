@@ -24,20 +24,14 @@
                         <button type="button" class="btn btn-primary">My Cart</button>
                     </a>
                 </li>
-                {% comment %} <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <button type="button" class="btn btn-primary">Categories</button>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'popularitem' %}">
+                        <button type="button" class="btn btn-primary">Popular Item</button>
                     </a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Action</a></li>
-                      <li><a class="dropdown-item" href="#">Another action</a></li>
-                      <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                  </li> {% endcomment %}
+                </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
-                    <!-- User is authenticated, show logout button -->
                     <li class="nav-item">
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
@@ -45,7 +39,6 @@
                         </form>
                     </li>
                 {% else %}
-                    <!-- User is not authenticated, show login and signup buttons -->
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'login' %}">
                             <button type="button" class="btn btn-primary">Log In</button>

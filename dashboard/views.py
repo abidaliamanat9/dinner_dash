@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, UpdateView
-from dashboard.models import Category, Item, Order, CartItem
+from dashboard.models import Category, Item, Order, CartItem, Resturant
 from dashboard.mixin import AdminRequiredMixin
 from django.utils import timezone
 
@@ -10,7 +10,7 @@ from django.utils import timezone
 class ItemCreateView(AdminRequiredMixin, CreateView):
     model = Item
     template_name = "dashboard/item_create.html"
-    fields = ["title", "description", "price", "photo", "category"]
+    fields = ["title", "description", "price", "photo", "category", "resturant"]
     success_url = reverse_lazy("dashboard")
     # login_url = reverse('accounts/login')
 
@@ -18,7 +18,29 @@ class ItemCreateView(AdminRequiredMixin, CreateView):
 class ItemUpdateView(AdminRequiredMixin, UpdateView):
     model = Item
     template_name = "dashboard/item_update.html"
-    fields = ["title", "description", "price", "photo", "retired", "category"]
+    fields = [
+        "title",
+        "description",
+        "price",
+        "photo",
+        "retired",
+        "category",
+        "resturant",
+    ]
+    success_url = reverse_lazy("dashboard")
+
+
+class ResturantCreateView(AdminRequiredMixin, CreateView):
+    model = Resturant
+    template_name = "dashboard/resturant_create.html"
+    fields = ["name"]
+    success_url = reverse_lazy("dashboard")
+
+
+class ResturantUpdateView(AdminRequiredMixin, UpdateView):
+    model = Resturant
+    template_name = "dashboard/resturant_update.html"
+    fields = ["name"]
     success_url = reverse_lazy("dashboard")
 
 
@@ -38,13 +60,14 @@ class CategoryUpdateView(AdminRequiredMixin, UpdateView):
 
 class Dashboard(View):
     def get(self, request):
+        resturants = Resturant.objects.all()
         categories = Category.objects.all()
         items = Item.objects.all()
 
         return render(
             request,
             "dashboard/dashboard.html",
-            {"categories": categories, "items": items},
+            {"resturants": resturants, "categories": categories, "items": items},
         )
 
 

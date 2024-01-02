@@ -5,14 +5,21 @@ from cloudinary.models import CloudinaryField
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Resturant(models.Model):
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Item(models.Model):
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=50, unique=True)
     description = models.TextField()
     price = models.DecimalField(
         max_digits=5,
@@ -21,9 +28,10 @@ class Item(models.Model):
             MinValueValidator(limit_value=1, message="Price must be greater than zero.")
         ],
     )
-    photo = CloudinaryField("photo", blank=True, null=True)
+    photo = CloudinaryField("photo", null=True)
     retired = models.BooleanField(default=False)
     category = models.ManyToManyField(Category)
+    resturant = models.ForeignKey(Resturant, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -55,3 +63,6 @@ class CartItem(models.Model):
     stprice = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.item.title
