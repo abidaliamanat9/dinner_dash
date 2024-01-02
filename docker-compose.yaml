@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+ web:
+   build: .
+   command: python manage.py runserver 0.0.0.0:8080
+   volumes:
+     - .:/code
+   ports:
+     - "8080:8080"
+   
+   environment:
+     - DB_NAME=postgres
+     - DB_USER=postgres
+     - DB_PASSWORD=postgres
+   depends_on:
+     - db
+ db:
+   image: postgres
+   volumes:
+     - ./data/db:/var/lib/postgresql/data
+   environment:
+     - DB_DB=postgres
+     - DB_USER=postgres
+     - DB_PASSWORD=postgres
+   container_name: postgres_db
+   env_file:
+     - ./.env 

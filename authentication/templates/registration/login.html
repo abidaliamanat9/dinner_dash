@@ -2,28 +2,30 @@
 
 {% block content %}
   <h1>Log In </h1>
+  {% if form.errors %}
+  <div class="align-items-center my-3" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 9999;">
+      <div class="d-flex p-2 flex-column">
+          {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                  <div >
+                      {{ field|title }}: {{ error }}
+                  </div>
+              {% endfor %}
+          {% endfor %}
+      </div>
+  </div>
+  {% endif %}
   <form method="post">
     {% csrf_token %}
-    {% comment %} {{form.as_p}} {% endcomment %}
     <div class="mb-3">
       <label class="form-label">Email address</label>
       <br>
       {{form.username}}
-      {% if form.username.errors %}
-        <div class="text-danger">
-        {{ form.username.errors }}
-        </div>
-      {% endif %}
     </div>
     <div class="mb-3">
       <label class="form-label">Password</label>
       <br>
       {{form.password}}
-      {% if form.password.errors %}
-        <div class="text-danger">
-        {{ form.password.errors }}
-        </div>
-      {% endif %}
     </div> 
     
     <button type="submit">Log In</button>
