@@ -222,19 +222,18 @@ class OrderDetailView(LoginRequiredMixin, ListView):
 
 class IncrementQuantityView(View):
     def get(self, request, item_id):
-        cartitem = CartItem.objects.get(pk=item_id)
-        item = Item.objects.get(pk=cartitem.item_id)
 
         if request.user.is_authenticated and not request.user.is_staff:
+            cartitem = CartItem.objects.get(pk=item_id)
+            item = Item.objects.get(pk=cartitem.item_id)
             cartitem = CartItem.objects.get(item=item, order=None, user=request.user)
             cartitem.quantity += 1
             cartitem.stprice = cartitem.quantity * item.price
             cartitem.save()
         else:
             cart = request.session.get("cart", [])
-
             for cart_item in cart:
-                if cart_item["id"] == item.id:
+                if cart_item["id"] == item_id:
                     cart_item["quantity"] += 1
                     cart_item["stprice"] = cart_item["quantity"] * cart_item["price"]
                     request.session.save()
@@ -246,10 +245,10 @@ class IncrementQuantityView(View):
 
 class DecrementQuantityView(View):
     def get(self, request, item_id):
-        cartitem = CartItem.objects.get(pk=item_id)
-        item = Item.objects.get(pk=cartitem.item_id)
 
         if request.user.is_authenticated and not request.user.is_staff:
+            cartitem = CartItem.objects.get(pk=item_id)
+            item = Item.objects.get(pk=cartitem.item_id)
             cartitem = CartItem.objects.get(item=item, order=None, user=request.user)
             cartitem.quantity -= 1
             if cartitem.quantity < 1:
@@ -260,7 +259,7 @@ class DecrementQuantityView(View):
             cart = request.session.get("cart", [])
 
             for cart_item in cart:
-                if cart_item["id"] == item.id:
+                if cart_item["id"] == item_id:
                     cart_item["quantity"] -= 1
                     if cart_item["quantity"] < 1:
                         cart_item["quantity"] = 1
