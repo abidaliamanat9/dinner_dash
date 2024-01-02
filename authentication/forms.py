@@ -13,7 +13,3 @@ class SignUpForm(UserCreationForm):
             "password2",
             "display_name",
         ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["display_name"].min_lenght = 2
