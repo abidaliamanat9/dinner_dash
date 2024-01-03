@@ -22,21 +22,6 @@ body {
 	padding-bottom: 1.5rem !important;
 }
 
-.categories-container {
-	height: 100%;
-	width: 25%;
-	position: fixed;
-	z-index: 1;
-	top: 0;
-	left: 0;
-	overflow-x: hidden;
-	padding-top: 130px;
-}
-
-.products-container {
-	margin-left: 25%;
-	width: 75%;
-}
 
 .col-lg-4,
 .col-lg-6,
@@ -75,3 +60,27 @@ body {
 	height: 40vh;
 	object-fit: cover;
 }
+
+.messages {
+	list-style: none;
+	padding: 10px;
+  }
+  
+  .success {
+	color: green;
+  }
+  
+  .info {
+	color: blue;
+  }
+  
+  .warning {
+	color: orange;
+  }
+  
+  .error {
+	color: red;
+  }
+  .update-button {
+	float: right;
+  }

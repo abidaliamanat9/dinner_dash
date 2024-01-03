@@ -4,61 +4,77 @@ from django.views import View
 from django.views.generic import CreateView, UpdateView
 from dashboard.models import Category, Item, Order, CartItem, Resturant
 from dashboard.mixin import AdminRequiredMixin
-from django.utils import timezone
+from django.contrib import messages
+from dashboard.forms import CategoryForm, ResturantForm, ItemForm
 
 
 class ItemCreateView(AdminRequiredMixin, CreateView):
     model = Item
     template_name = "dashboard/item_create.html"
-    fields = ["title", "description", "price", "photo", "category", "resturant"]
+    form_class = ItemForm
     success_url = reverse_lazy("dashboard")
-    # login_url = reverse('accounts/login')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Item created successfully.")
+        return super().form_valid(form)
 
 
 class ItemUpdateView(AdminRequiredMixin, UpdateView):
     model = Item
     template_name = "dashboard/item_update.html"
-    fields = [
-        "title",
-        "description",
-        "price",
-        "photo",
-        "retired",
-        "category",
-        "resturant",
-    ]
+    form_class = ItemForm
     success_url = reverse_lazy("dashboard")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Item Updated successfully.")
+        return super().form_valid(form)
 
 
 class ResturantCreateView(AdminRequiredMixin, CreateView):
     model = Resturant
     template_name = "dashboard/resturant_create.html"
-    fields = ["name"]
+    form_class = ResturantForm
     success_url = reverse_lazy("dashboard")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Resturant created successfully.")
+        return super().form_valid(form)
 
 
 class ResturantUpdateView(AdminRequiredMixin, UpdateView):
     model = Resturant
     template_name = "dashboard/resturant_update.html"
-    fields = ["name"]
+    form_class = ResturantForm
     success_url = reverse_lazy("dashboard")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Resturant updated successfully.")
+        return super().form_valid(form)
 
 
 class CategoryCreateView(AdminRequiredMixin, CreateView):
     model = Category
     template_name = "dashboard/category_create.html"
-    fields = ["name"]
+    form_class = CategoryForm
     success_url = reverse_lazy("dashboard")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Category created successfully.")
+        return super().form_valid(form)
 
 
 class CategoryUpdateView(AdminRequiredMixin, UpdateView):
     model = Category
     template_name = "dashboard/category_update.html"
-    fields = ["name"]
+    form_class = CategoryForm
     success_url = reverse_lazy("dashboard")
 
+    def form_valid(self, form):
+        messages.success(self.request, "Category updated successfully.")
+        return super().form_valid(form)
 
-class Dashboard(View):
+
+class Dashboard(AdminRequiredMixin, View):
     def get(self, request):
         resturants = Resturant.objects.all()
         categories = Category.objects.all()
@@ -109,64 +125,57 @@ class OrderDetailView(AdminRequiredMixin, View):
         )
 
 
+def orderOperation(request, order_id, status):
+    try:
+        order = Order.objects.get(pk=order_id)
+        order.status = status
+        order.save()
+        messages.success(request, f"Order with {order_id} is {status}")
+    except:
+        messages.warning(request, "Order not exists")
+
+
 class OrderCancelView(AdminRequiredMixin, View):
     def get(self, request, order_id):
-        order = Order.objects.get(pk=order_id)
-        order.status = "CANCELLED"
-        order.status_changed_at = timezone.now()
-        order.save()
+        orderOperation(request=request, order_id=order_id, status="CANCELLED")
         return redirect("ordersdashboard")
 
 
 class OrderPaidView(AdminRequiredMixin, View):
     def get(self, request, order_id):
-        order = Order.objects.get(pk=order_id)
-        order.status = "PAID"
-        order.status_changed_at = timezone.now()
-        order.save()
+        orderOperation(request=request, order_id=order_id, status="PAID")
         return redirect("ordersdashboard")
 
 
 class OrderCompletedView(AdminRequiredMixin, View):
     def get(self, request, order_id):
-        order = Order.objects.get(pk=order_id)
-        order.status = "COMPLETED"
-        order.status_changed_at = timezone.now()
-        order.save()
+        orderOperation(request=request, order_id=order_id, status="COMPLETED")
         return redirect("ordersdashboard")
+
+
+def orderfilter(request, status):
+    orders = Order.objects.filter(status=status)
+    status = status
+    return render(
+        request, "dashboard/filterorders.html", {"orders": orders, "status": status}
+    )
 
 
 class OrderedView(AdminRequiredMixin, View):
     def get(self, request):
-        orders = Order.objects.filter(status="ORDERED")
-        status = "Ordered"
-        return render(
-            request, "dashboard/filterorders.html", {"orders": orders, "status": status}
-        )
+        orderfilter(request=request, status="ORDERED")
 
 
 class PaidView(AdminRequiredMixin, View):
     def get(self, request):
-        orders = Order.objects.filter(status="PAID")
-        status = "Paid"
-        return render(
-            request, "dashboard/filterorders.html", {"orders": orders, "status": status}
-        )
+        orderfilter(request=request, status="PAID")
 
 
 class CanceledView(AdminRequiredMixin, View):
     def get(self, request):
-        orders = Order.objects.filter(status="CANCELED")
-        status = "Canceled"
-        return render(
-            request, "dashboard/filterorders.html", {"orders": orders, "status": status}
-        )
+        orderfilter(request=request, status="CANCELLED")
 
 
 class CompletedView(AdminRequiredMixin, View):
     def get(self, request):
-        orders = Order.objects.filter(status="COMPLETED")
-        status = "Completed"
-        return render(
-            request, "dashboard/filterorders.html", {"orders": orders, "status": status}
-        )
+        orderfilter(request=request, status="COMPLETED")

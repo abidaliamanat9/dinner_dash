@@ -17,12 +17,6 @@
   {% endif %}
   <form method="post">
     {% csrf_token %}
-    {% comment %} {% for field in form %}
-    <div class="m-form-group">
-        <label for="{{ field.id_for_label }}" class="m-text-light">{{ field.label }}</label>
-        {{ field }}
-    </div>  {% endcomment %}
-    {% comment %} {% endfor %} {% endcomment %}
     <div class="mb-3">
       <label class="form-label">Email address</label>
       <br>
@@ -49,7 +43,7 @@
       {{form.password2}}
     </div>
     <div class="mb-3">
-      <label class="form-label">Dispaly Name</label>
+      <label class="form-label">Display Name</label>
       <br>
       {{form.display_name}}
     </div>

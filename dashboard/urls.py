@@ -13,7 +13,9 @@ urlpatterns = [
         name="category_update",
     ),
     path(
-        "resturant/create/", views.ResturantCreateView.as_view(), name="resturant_create"
+        "resturant/create/",
+        views.ResturantCreateView.as_view(),
+        name="resturant_create",
     ),
     path(
         "resturant/update/<int:pk>/",

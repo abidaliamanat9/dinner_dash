@@ -3,6 +3,7 @@ from django.db import models
 from .manager import CustomUserManager
 from django.core.validators import MinLengthValidator
 
+
 class User(AbstractUser):
     email = models.EmailField(
         max_length=50,
@@ -17,11 +18,6 @@ class User(AbstractUser):
         max_length=32,
         blank=True,
         null=True,
-        validators=[
-            MinLengthValidator(
-                limit_value=2, message="Display name must be at least 2 characters."
-            )
-        ],
     )
     username = None
     objects = CustomUserManager()

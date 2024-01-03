@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure-ka&_3k_52_6t1xu^_#xhr7-&011)of3lh29p)v!0#2e1!l^iw3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -88,11 +88,16 @@ DATABASES = {
         "NAME": config("DB_NAME"),
         "USER": config("DB_USER"),
         "PASSWORD": config("DB_PASSWORD"),
-        "HOST": config("DB_HOST"),
+        "HOST": "postgres-container",
         "PORT": config("DB_PORT"),
     }
 }
-
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -145,3 +150,5 @@ cloudinary.config(
 
 # Django Cloudinary Storage configuration
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+LOGIN_URL = 'login'

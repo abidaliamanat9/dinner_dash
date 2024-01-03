@@ -4,6 +4,7 @@ from .forms import SignUpForm
 from dashboard.models import CartItem
 from django.urls import reverse_lazy
 from django.views import View
+from django.contrib import messages
 
 
 class SignupView(View):
@@ -17,6 +18,9 @@ class SignupView(View):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password1"])
             user.save()
+            messages.success(
+                request, "You account is created successfuly, please login to continue"
+            )
             return redirect("login")
         else:
             return render(request, "authentication/signup.html", {"form": form})
@@ -36,17 +40,16 @@ class CustomLoginView(LoginView):
             for item_data in cart:
                 quantity = item_data.get("quantity")
                 item_id = item_data.get("id")
-                stprice = item_data.get("stprice")
                 CartItem.objects.create(
                     quantity=quantity,
                     item_id=item_id,
-                    stprice=stprice,
                     user=self.request.user,
                 )
             self.request.session.pop("cart", None)
         return response
 
     def get_success_url(self):
+        messages.success(self.request, "User Log In Successfuly")
         if self.request.user.is_staff:
             return reverse_lazy("dashboard")
         else:
