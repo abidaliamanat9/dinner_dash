@@ -9,6 +9,7 @@
                 <p class="card-text">{{ item.description }}</p>
                 <p class="card-text"><strong>${{ item.price }}</strong></p>
                 <a href="{% url 'userhome'%}" style="display: inline-block; float: right">Back to Home</a>
+                <a href="{% url 'add_to_cart' item_id=item.pk %}" class="btn btn-primary">Add to Cart</a>
             </div>
         </div>
     </div>

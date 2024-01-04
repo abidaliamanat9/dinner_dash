@@ -1,27 +1,22 @@
-# set python version
+# Use an official Python runtime as a parent image
 FROM python:3.8
 
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# automatically install updated version of pip
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip
-
-
-# set virtual environment
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-
-# set working directory
-WORKDIR /code
-
-
-# copy requirements file
-COPY requirements.txt /code/
-
-
-# Install packages
 RUN pip install -r requirements.txt
 
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
 
-# copy your code
-COPY . /code/
+# Run app.py when the container launches
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

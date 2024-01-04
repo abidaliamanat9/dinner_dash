@@ -1,27 +1,34 @@
-version: '3.8'
+version: '3'
+
 services:
- web:
-   build: .
-   command: python manage.py runserver 0.0.0.0:8080
-   volumes:
-     - .:/code
-   ports:
-     - "8080:8080"
-   
-   environment:
-     - DB_NAME=postgres
-     - DB_USER=postgres
-     - DB_PASSWORD=postgres
-   depends_on:
-     - db
- db:
-   image: postgres
-   volumes:
-     - ./data/db:/var/lib/postgresql/data
-   environment:
-     - DB_DB=postgres
-     - DB_USER=postgres
-     - DB_PASSWORD=postgres
-   container_name: postgres_db
-   env_file:
-     - ./.env 
+  # Django web application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: django-app
+    container_name: django-container
+    command: [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_DB_HOST=db
+      - DJANGO_DB_PORT=5432
+      - DJANGO_DB_NAME=postgres
+      - DJANGO_DB_USER=postgres
+      - DJANGO_DB_PASSWORD=postgres
+
+  # PostgreSQL database
+  db:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+     - ./data/db:/var/lib/postgresql/data 
