@@ -22,7 +22,7 @@ urlpatterns = [
         views.ResturantUpdateView.as_view(),
         name="resturant_update",
     ),
-    path("admin-dashboard/", views.Dashboard.as_view(), name="dashboard"),
+    path("admin-dashboard/", views.DashboardView.as_view(), name="dashboard"),
     path(
         "orders-dashboard/",
         views.AdminOrderDashboardView.as_view(),
@@ -34,38 +34,13 @@ urlpatterns = [
         name="orderdetail",
     ),
     path(
-        "cancel-order/<int:order_id>/",
-        views.OrderCancelView.as_view(),
-        name="cancelorder",
+        "modify-order/<int:order_id>/",
+        views.ModifyOrderView.as_view(),
+        name="modifyorder",
     ),
     path(
-        "paid-order/<int:order_id>/",
-        views.OrderPaidView.as_view(),
-        name="paidorder",
-    ),
-    path(
-        "completed-order/<int:order_id>/",
-        views.OrderCompletedView.as_view(),
-        name="completedorder",
-    ),
-    path(
-        "ordered-order-filter/",
-        views.OrderedView.as_view(),
-        name="orderedorderfilter",
-    ),
-    path(
-        "paid-order-filter/",
-        views.PaidView.as_view(),
-        name="paidorderfilter",
-    ),
-    path(
-        "canceled-order-filter/",
-        views.CanceledView.as_view(),
-        name="canceledorderfilter",
-    ),
-    path(
-        "completed-order-filter/",
-        views.CompletedView.as_view(),
-        name="completedorderfilter",
+        "filter-order/",
+        views.FilterOrderView.as_view(),
+        name="filterorder",
     ),
 ]

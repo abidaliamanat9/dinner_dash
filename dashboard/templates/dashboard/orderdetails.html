@@ -41,7 +41,7 @@
       {% for cart_item in cartitems %}
         <tr>
           <td><a href="{% url 'item_detail' cart_item.item.id %}">{{ cart_item.item.title }}</a></td>
-          <td>{{ cart_item.item.price }}</td>
+          <td>{{ cart_item.price }}</td>
           <td>{{ cart_item.quantity }}</td>
           <td>${{ cart_item.stprice }}</td>
         </tr>

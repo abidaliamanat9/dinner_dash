@@ -24,10 +24,10 @@
     <tbody>
       <tr>
         <td>Total</td>
-        <td><a href="{% url 'orderedorderfilter' %}">{{ order_status_counts.ordered }}</a></td>
-        <td><a href="{% url 'paidorderfilter' %}">{{ order_status_counts.paid }}</a></td>
-        <td><a href="{% url 'canceledorderfilter' %}">{{ order_status_counts.cancelled }}</a></td>
-        <td><a href="{% url 'completedorderfilter' %}">{{ order_status_counts.completed }}</a></td>
+        <td><a href="{% url 'filterorder' %}?action=ORDERED">{{ order_status_counts.ordered }}</a></td>
+        <td><a href="{% url 'filterorder' %}?action=PAID">{{ order_status_counts.paid }}</a></td>
+        <td><a href="{% url 'filterorder' %}?action=CANCELLED">{{ order_status_counts.cancelled }}</a></td>
+        <td><a href="{% url 'filterorder' %}?action=COMPLETED">{{ order_status_counts.completed }}</a></td>
         </tr>
     </tbody>
   </table>
@@ -55,17 +55,17 @@
           </td>
           {% if order.status == "PAID" %}
             <td>          
-                <a href="{% url 'completedorder' order_id=order.id %}">Mark as Completed</a>
+                <a href="{% url 'modifyorder' order_id=order.id %}?action=COMPLETED">Mark as Completed</a>
             </td>
             <td>
-                <a href="{% url 'cancelorder' order_id=order.id %}" >Cancel Order</a>
+                <a href="{% url 'modifyorder' order_id=order.id %}?action=CANCELLED" >Cancel Order</a>
             </td>
           {% elif order.status == "ORDERED" %}
             <td>
-                <a href="{% url 'paidorder' order_id=order.id %}" >Mark as Paid</a>
+                <a href="{% url 'modifyorder' order_id=order.id %}?action=PAID" >Mark as Paid</a>
             </td>
             <td>
-                <a href="{% url 'cancelorder' order_id=order.id %}">Cancel Order</a>
+                <a href="{% url 'modifyorder' order_id=order.id %}?action=CANCELLED">Cancel Order</a>
             </td>
             {% endif %}
           </td>

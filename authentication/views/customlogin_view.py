@@ -1,29 +1,7 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.views import LoginView, LogoutView
-from .forms import SignUpForm
-from dashboard.models import CartItem
+from django.contrib.auth.views import LoginView
+from dashboard.models.cartitem_model import CartItem
 from django.urls import reverse_lazy
-from django.views import View
 from django.contrib import messages
-
-
-class SignupView(View):
-    def get(self, request):
-        form = SignUpForm()
-        return render(request, "authentication/signup.html", {"form": form})
-
-    def post(self, request):
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password1"])
-            user.save()
-            messages.success(
-                request, "You account is created successfuly, please login to continue"
-            )
-            return redirect("login")
-        else:
-            return render(request, "authentication/signup.html", {"form": form})
 
 
 class CustomLoginView(LoginView):
@@ -40,9 +18,11 @@ class CustomLoginView(LoginView):
             for item_data in cart:
                 quantity = item_data.get("quantity")
                 item_id = item_data.get("id")
+                price = item_data.get("price")
                 CartItem.objects.create(
                     quantity=quantity,
                     item_id=item_id,
+                    price=price,
                     user=self.request.user,
                 )
             self.request.session.pop("cart", None)
@@ -54,7 +34,3 @@ class CustomLoginView(LoginView):
             return reverse_lazy("dashboard")
         else:
             return reverse_lazy("userhome")
-
-
-class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy("userhome")

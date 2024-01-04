@@ -44,7 +44,7 @@
                     <div style="flex:1">{{ forloop.counter }}</div>
 					{% if user.is_authenticated and not user.is_staff %}
 						<div style="flex:1"><p>{{item.item.title}}</p></div>
-						<div style="flex:1"><p>${{item.item.price|floatformat:2}}</p></div>
+						<div style="flex:1"><p>${{item.price|floatformat:2}}</p></div>
 					{% else %}
 						<div style="flex:1"><p>{{item.name}}</p></div>
 						<div style="flex:1"><p>${{item.price|floatformat:2}}</p></div>
@@ -52,9 +52,9 @@
 					<div style="flex:1">
 						<p class="quantity">{{item.quantity}}</p>
 						<div class="quantity">
-							<a href={% url 'incrementquantity' item_id=item.id %}><img class="chg-quantity" src="{% static  'images/arrow-up.png' %}"></a>
+							<a href="{% url 'modifyquantity' item_id=item.id %}?action=increment"><img class="chg-quantity" src="{% static  'images/arrow-up.png' %}"></a>
 					
-							<a href={% url 'decrementquantity' item_id=item.id %}><img class="chg-quantity" src="{% static  'images/arrow-down.png' %}"></a>
+							<a href="{% url 'modifyquantity' item_id=item.id %}?action=decrement"><img class="chg-quantity" src="{% static  'images/arrow-down.png' %}"></a>
 						</div>
 					</div>
 					<div style="flex:1"><p>${{item.stprice|floatformat:2}}</p></div>
