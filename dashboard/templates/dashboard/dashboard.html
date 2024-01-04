@@ -1,52 +1,29 @@
 {% extends 'adminbase.html' %}
 {% load static %}
 {% block bcontent %}
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</div>
+{% endif %}
 <div class="container-fluid-modify">
-    <div class="row w-100 h-100">
-        <div class="col-md-3 col-lg-3 w-25 categories-container">
-            <!-- Left sidebar for categories -->
-            <div class="list-group">
-                <h4>Resturants</h4>
-                {% for resturant in resturants %}
-                <div class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ resturant.name }}
-                    <div class="btn-group">
-                        <a href="{% url 'resturant_update' pk=resturant.pk %}" class="btn btn-primary btn-sm">Update</a>
-                    </div>
-                </div>
-                {% endfor %}
-                <br><br>
-                <h4>Categories</h4>
-                {% for category in categories %}
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ category.name }}
-                        <div class="btn-group">
-                            <a href="{% url 'category_update' pk=category.pk %}" class="btn btn-primary btn-sm">Update</a>
-                        </div>
-                    </div>
-                {% endfor %}
+	<div class="row">
+        {% for item in items %}
+		    <div class="col-lg-3 col-md-4 col-sm-12">
+                <div class="card card-vertical my-3">
+                    <img src="{{ item.get_photo_url }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{item.title}}</h5>
+                            <p class="card-text">Retired: {{item.retired}}</p>
+				            <hr>
+				            <a href="{% url 'item_update' pk=item.pk %}" class="btn btn-primary">Update</a>
+				            <h4 style="display: inline-block; float: right"><strong>{{item.price}}$</strong></h4>
+			            </div>
+		        </div>
             </div>
-        </div>
-        <div class="col-md-9 col-lg-9 w-75 products-container">
-            <div class="container-fluid-modify">
-	            <div class="row">
-                    {% for item in items %}
-		            <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="card card-vertical my-3">
-                            <img src="{{ item.photo.url }}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">{{item.title}}</h5>
-                                <p class="card-text">Retired: {{item.retired}}</p>
-				                <hr>
-				                <a href="{% url 'item_update' pk=item.pk %}" class="btn btn-primary">Update</a>
-				                <h4 style="display: inline-block; float: right"><strong>{{item.price}}$</strong></h4>
-			                </div>
-		                </div>
-                    </div>
-                    {% endfor %}
-	            </div>
-            </div>
-        </div>
-    </div>
+        {% endfor %}
+	</div>
 </div>
 {% endblock%}

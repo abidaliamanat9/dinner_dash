@@ -1,5 +1,12 @@
 {% extends 'userbase.html' %}
 {% block bcontent %}
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</div>
+{% endif %}
   <h1>My Orders</h1>
   <table class="table">
     <thead>

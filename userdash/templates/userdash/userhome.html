@@ -1,56 +1,29 @@
 {% extends 'userbase.html' %}
 {% load static %}
 {% block bcontent %}
-<div class="container-fluid-modify">
-    <div class="row w-100 h-100">
-        <div class="col-md-3 col-lg-3 w-25 categories-container">
-            <!-- Left sidebar for categories -->
-            <div class="list-group">
-                <h4>Resturants</h4>
-                {% for resturant in resturants %}
-                    <a href="{% url 'resturantitems' rest_id=resturant.pk %}" class="list-group-item list-group-item-action">
-                        {{ resturant.name }}
-                    </a>
-                {% endfor %}
-                <br><br>
-                <h4>Categories</h4>
-                {% for category in categories %}
-                    <a href="{% url 'categoryitems' cg_id=category.pk %}" class="list-group-item list-group-item-action">
-                        {{ category.name }}
-                    </a>
-                {% endfor %}
-            </div>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
         </div>
-        <div class="col-md-9 col-lg-9 w-75 products-container">
-            <div class="container-fluid-modify">
-                {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <div class="alert alert-warning" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
+    {% endif %}
+    <div class="container-fluid-modify">          
+	    <div class="row">
+            {% for item in items %}
+		        <div class="col-lg-3 col-md-4 col-sm-12">
+                    <div class="card card-vertical my-3">
+                        <img src="{{ item.get_photo_url }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{item.title}}</h5>
+				            <hr>
+				            <a href="{% url 'add_to_cart' item_id=item.pk %}" class="btn btn-primary">Add to Cart</a>
+			                <a class="btn btn-outline-success" href="{% url 'item_detail' pk=item.pk %}">View</a>
+				            <h4 style="display: inline-block; float: right"><strong>{{item.price}}$</strong></h4>
+			            </div>
+		            </div>
                 </div>
-                {% endif %}
-            
-	            <div class="row">
-                    {% for item in items %}
-		            <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="card card-vertical my-3">
-                            <img src="{{ item.photo.url }}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">{{item.title}}</h5>
-				                <hr>
-				                <a href="{% url 'add_to_cart' item_id=item.pk %}" class="btn btn-primary">Add to Cart</a>
-			                    <a class="btn btn-outline-success" href="{% url 'item_detail' pk=item.pk %}">View</a>
-				                <h4 style="display: inline-block; float: right"><strong>{{item.price}}$</strong></h4>
-			                </div>
-		                </div>
-                    </div>
-                    {% endfor %}
-	            </div>
-            </div>
-        </div>
+            {% endfor %}
+	    </div>
     </div>
-</div>
 {% endblock%}
