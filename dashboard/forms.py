@@ -33,7 +33,7 @@ class ResturantForm(forms.ModelForm):
 class ItemForm(forms.ModelForm):
     category = forms.ModelMultipleChoiceField(
         queryset=Category.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.SelectMultiple,
         required=True,
     )
 
@@ -44,9 +44,7 @@ class ItemForm(forms.ModelForm):
     def clean_title(self):
         title = self.cleaned_data["title"]
         if len(title) < 5 or len(title) > 50:
-            raise forms.ValidationError(
-                "Enter Item name between 5 to 50 characters"
-            )
+            raise forms.ValidationError("Enter Item name between 5 to 50 characters")
         return title
 
     def clean_price(self):

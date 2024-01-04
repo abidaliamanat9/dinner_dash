@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-ka&_3k_52_6t1xu^_#xhr7-&011)of3lh29p)v!0#2e1!l^iw3"
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -151,4 +151,4 @@ cloudinary.config(
 # Django Cloudinary Storage configuration
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-LOGIN_URL = 'login'
+LOGIN_URL = "login"
