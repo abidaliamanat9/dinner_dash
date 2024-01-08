@@ -38,4 +38,4 @@ class CustomLoginView(LoginView):
         if next_url:
             return next_url
         else:
-            return reverse_lazy("myorders")
+            return reverse_lazy("userhome")
