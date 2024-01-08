@@ -130,3 +130,4 @@ cython_debug/
 #.idea/
 .env
 data/
+htmlcov/
