@@ -29,8 +29,13 @@ class CustomLoginView(LoginView):
         return response
 
     def get_success_url(self):
-        messages.success(self.request, "User Log In Successfuly")
+        messages.success(self.request, "User Log In Successfully")
+
         if self.request.user.is_staff:
             return reverse_lazy("dashboard")
+
+        next_url = self.request.GET.get("next", None)
+        if next_url:
+            return next_url
         else:
             return reverse_lazy("userhome")
