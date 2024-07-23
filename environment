@@ -1,0 +1,11 @@
+CLOUDINARY_CLOUD_NAME=dtrcsmqle
+CLOUDINARY_API_KEY=968933931858783
+CLOUDINARY_API_SECRET=_F0orGbLHBMyYtrDdFrUYA9djLk
+
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=postgres-container
+DB_PORT=5432
+
+SECRET_KEY = "django-insecure-ka&_3k_52_6t1xu^_#xhr7-&011)of3lh29p)v!0#2e1!l^iw3"
